@@ -82,7 +82,7 @@ def conflictJamRuangan(matkul, ruangan):
 
 def checkConstraintMatkul(matkul1, matkul2):
 	constraintBroken = 0
-	if (matkul1.hari == matkul2.hari):
+	if (matkul1.hari == matkul2.hari and matkul1.kelas == matkul2.kelas):
 		if (matkul1.jam_mulai >= matkul2.jam_mulai and matkul1.jam_mulai < matkul2.jam_mulai+matkul2.durasi):
 			constraintBroken = 1
 		if (matkul2.jam_mulai >= matkul1.jam_mulai and matkul2.jam_mulai < matkul1.jam_mulai+matkul1.durasi):
