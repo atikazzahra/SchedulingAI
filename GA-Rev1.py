@@ -179,8 +179,8 @@ def fitnessTest(populasi):
 
 def crossing(species1, species2):
 	lenr = random.randrange(0, len(species1))
-	nspecies1 = copySpecies(species1[lenr:]) + copySpecies(species2[:lenr])
-	nspecies2 = copySpecies(species2[lenr:]) + copySpecies(species1[:lenr])
+	nspecies1 = copySpecies(species1[:lenr]) + copySpecies(species2[lenr:])
+	nspecies2 = copySpecies(species2[:lenr]) + copySpecies(species1[lenr:])
 	return nspecies1, nspecies2
 
 def mutation(population, list_ruangan):
