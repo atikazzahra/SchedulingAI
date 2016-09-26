@@ -127,13 +127,9 @@ def highestValueNeighboor(list_matkul, list_ruangan):
 			if checkConstraintMatkul(list_matkul[i], list_matkul[j]) != 0:
 				if conflictHariMatkul(list_matkul[i], list_matkul[j]):
 					while (successor[i].hari == successor[j].hari):
-						print ("a")
 						successor[i].hari = successor[i].domain_hari[random.randrange(0,len(successor[i].domain_hari))]
 				elif conflictJamMatkul(list_matkul[i], list_matkul[j]):
 					while (successor[i].jam_mulai == successor[j].jam_mulai):
-						print successor[i].domain_jam_mulai
-						print successor[i].kode
-						print ("b", successor[i].jam_mulai)
 						successor[i].jam_mulai = successor[i].domain_jam_mulai[random.randrange(0,len(successor[i].domain_jam_mulai))]
 		
 		if checkConstraintRuang(successor[i], list_ruangan) != 0:
@@ -146,23 +142,66 @@ def highestValueNeighboor(list_matkul, list_ruangan):
 			if conflictHariRuangan(list_matkul[i], ruangan):
 				if sameValueinLists(ruangan.hari, successor[i].domain_hari):
 					while (successor[i].hari not in ruangan.hari):
-						print successor[i].domain_hari
-						print successor[i].kode
-						print ("c", successor[i].hari)
 						successor[i].hari = successor[i].domain_hari[random.randrange(0,len(successor[i].domain_hari))]
 				else: 
 					successor[i].kelas = successor[i].domain_kelas[random.randrange(0,len(successor[i].domain_kelas))]
 			if conflictJamRuangan(successor[i], ruangan):
 				if ruangan.jam_mulai in successor[i].domain_jam_mulai:
 					while conflictJamRuangan(successor[i], ruangan):
-						print successor[i].domain_jam_mulai
-						print successor[i].kode
-						print ("d", successor[i].jam_mulai, ruangan.jam_mulai)
 						successor[i].jam_mulai = successor[i].domain_jam_mulai[random.randrange(0,len(successor[i].domain_jam_mulai))]
 				else: 
 					successor[i].kelas = successor[i].domain_kelas[random.randrange(0,len(successor[i].domain_kelas))]	
 	return successor
 
+#SA
+def searchNeighbour(list_matkul,list_ruangan):
+	successor = copySpecies(list_matkul)
+	i = random.randrange(0,(len(list_matkul)))
+	successor[i].kelas = successor[i].domain_kelas[random.randrange(0,len(successor[i].domain_kelas))]
+	successor[i].hari = successor[i].domain_hari[random.randrange(0,len(successor[i].domain_hari))]
+	successor[i].jam_mulai = successor[i].domain_jam_mulai[random.randrange(0,len(successor[i].domain_jam_mulai))]
+
+	return successor
+
+def SHC(list_matkul,list_ruangan):
+	successor = copySpecies(list_matkul)
+	i = random.randrange(0,(len(list_matkul)))
+	j = random.randrange(0,(len(list_matkul)))
+	while (i==j):
+		i = random.randrange(1,(len(list_matkul)))
+		j = random.randrange(1,(len(list_matkul)))
+	if checkConstraintMatkul(list_matkul[i], list_matkul[j]) != 0:
+		if conflictHariMatkul(list_matkul[i], list_matkul[j]):
+				successor[i].hari = successor[i].domain_hari[random.randrange(0,len(successor[i].domain_hari))]
+		elif conflictJamMatkul(list_matkul[i], list_matkul[j]):
+					while (successor[i].jam_mulai == successor[j].jam_mulai):
+						successor[i].jam_mulai = successor[i].domain_jam_mulai[random.randrange(0,len(successor[i].domain_jam_mulai))]
+	if checkConstraintRuang(successor[i], list_ruangan) != 0:
+		ruangan = 0
+		for ruang in list_ruangan:
+			if (ruang.kelas == list_matkul[i].kelas):
+				ruangan = ruang
+				break
+
+		if conflictHariRuangan(list_matkul[i], ruangan):
+			if sameValueinLists(ruangan.hari, successor[i].domain_hari):
+				while (successor[i].hari not in ruangan.hari):
+					successor[i].hari = successor[i].domain_hari[random.randrange(0,len(successor[i].domain_hari))]
+			else: 
+				successor[i].kelas = successor[i].domain_kelas[random.randrange(0,len(successor[i].domain_kelas))]
+
+		if conflictJamRuangan(successor[i], ruangan):
+			if ruangan.jam_mulai in successor[i].domain_jam_mulai:
+				while conflictJamRuangan(successor[i], ruangan):
+					successor[i].jam_mulai = successor[i].domain_jam_mulai[random.randrange(0,len(successor[i].domain_jam_mulai))]
+			else: 
+				successor[i].kelas = successor[i].domain_kelas[random.randrange(0,len(successor[i].domain_kelas))]	
+
+	return successor
+
+
+
+#GA
 def sameValueinLists(list1, list2):
 	for x in list1:
 		if x in list2:
@@ -239,20 +278,41 @@ def main():
 		fittestSpecies[0][i].print_jadwal()
 	print 'Constraint broken: ' + str(fittestSpecies[1])
 	print 'Constraint broken: ' + str(checkConstraint(fittestSpecies[0], listRuangan))
-
+	print('\n')
 	print("HILL")
 	problem = createSpecies(listJadwal, listRuangan)
 	current = copySpecies(problem)
 	neighboor = highestValueNeighboor(current, listRuangan)
-	print "current:", checkConstraint(current, listRuangan), "neighboor:", checkConstraint(neighboor, listRuangan)
 	while(checkConstraint(current, listRuangan) > checkConstraint(neighboor, listRuangan)):
-		print "current:", checkConstraint(current, listRuangan), "neighboor:", checkConstraint(neighboor, listRuangan)
 		current = copySpecies(neighboor)
 		neighboor = highestValueNeighboor(current, listRuangan)
 	problem = copySpecies(current)
 	for i in range(len(problem)):
 		problem[i].print_jadwal()
 	print 'constraintBroken: ' + str(checkConstraint(problem, listRuangan))
+	print('\n')
+	print("Simulated Annealing")
+	T = 100
+	k=0;
+	best = createSpecies(listJadwal, listRuangan)
+	neighbour = searchNeighbour(best, listRuangan)
+	if (checkConstraint(best,listRuangan)>=checkConstraint(neighbour,listRuangan)):
+			best = copySpecies(neighbour)
+	while (T>0.001) or (checkConstraint(best,listRuangan)!=0):
+		neighbour=searchNeighbour(neighbour,listRuangan)
+		if (checkConstraint(best,listRuangan)>=checkConstraint(neighbour,listRuangan)):
+			best = copySpecies(neighbour)
+		T = T-0.01
+
+	neighbour = SHC(best,listRuangan)
+	while (checkConstraint(best,listRuangan)>(checkConstraint(neighbour,listRuangan))):
+		best = copySpecies(neighbour)
+		neighbour = SHC(best,listRuangan)
+
+	problem = copySpecies(best)
+	for i in range(len(problem)):
+		problem[i].print_jadwal()
+	print 'constraintBroken: ' + str(checkConstraint(problem,listRuangan))
 
 if __name__ == '__main__':
 	main()
