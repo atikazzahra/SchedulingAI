@@ -1,4 +1,4 @@
-import random, copy
+import random, copy, math, operator
 
 class Jadwal:
 	def __init__(self, kode, kelas, jam_mulai, jam_akhir, durasi, hari):
@@ -199,6 +199,13 @@ def SHC(list_matkul,list_ruangan):
 
 	return successor
 
+def probability(E,Ei,T):
+	p = math.exp(-(E-Ei)/T)
+	p = abs(p)
+	p=p*100
+	if (p>100):
+		p = 100
+	return p
 
 
 #GA
@@ -279,6 +286,7 @@ def main():
 	print 'Constraint broken: ' + str(fittestSpecies[1])
 	print 'Constraint broken: ' + str(checkConstraint(fittestSpecies[0], listRuangan))
 	print('\n')
+
 	print("HILL")
 	problem = createSpecies(listJadwal, listRuangan)
 	current = copySpecies(problem)
@@ -291,28 +299,47 @@ def main():
 		problem[i].print_jadwal()
 	print 'constraintBroken: ' + str(checkConstraint(problem, listRuangan))
 	print('\n')
+
+
 	print("Simulated Annealing")
 	T = 100
-	k=0;
-	best = createSpecies(listJadwal, listRuangan)
-	neighbour = searchNeighbour(best, listRuangan)
-	if (checkConstraint(best,listRuangan)>=checkConstraint(neighbour,listRuangan)):
+	current = createSpecies(listJadwal, listRuangan)
+	neighbour = searchNeighbour(current, listRuangan)
+	if (checkConstraint(current,listRuangan)>=checkConstraint(neighbour,listRuangan)):
 			best = copySpecies(neighbour)
-	while (T>0.001) or (checkConstraint(best,listRuangan)!=0):
-		neighbour=searchNeighbour(neighbour,listRuangan)
-		if (checkConstraint(best,listRuangan)>=checkConstraint(neighbour,listRuangan)):
-			best = copySpecies(neighbour)
+			current = copySpecies(neighbour)
+	else:
+		best = copySpecies(current)
+
+	#mulai SA algorithm
+	#Random Walk
+	while (T>0.0001) and (checkConstraint(best,listRuangan)!=0):
+		neighbour=searchNeighbour(current,listRuangan)
+		E = checkConstraint(current,listRuangan)
+		Ei = checkConstraint(neighbour,listRuangan)
+		if (E>=Ei):
+			if (checkConstraint(best,listRuangan)>=checkConstraint(neighbour,listRuangan)):		
+				best = copySpecies(neighbour)
+			current = copySpecies(neighbour)
+		elif(T!=0):																				#kalo bad move
+			p = probability(E,Ei,T)
+			r = operator.div(100,p)
+			if (r!=1):
+				r = random.randrange(1,r)
+			if (r==1):
+				current = copySpecies(neighbour)
 		T = T-0.01
 
-	neighbour = SHC(best,listRuangan)
-	while (checkConstraint(best,listRuangan)>(checkConstraint(neighbour,listRuangan))):
-		best = copySpecies(neighbour)
+	#memulai Stochastic Hill Climbing
+	if (checkConstraint(best,listRuangan)>0):
 		neighbour = SHC(best,listRuangan)
+		while (checkConstraint(best,listRuangan)>(checkConstraint(neighbour,listRuangan))):
+			best = copySpecies(neighbour)
+			neighbour = SHC(best,listRuangan)
 
-	problem = copySpecies(best)
-	for i in range(len(problem)):
-		problem[i].print_jadwal()
-	print 'constraintBroken: ' + str(checkConstraint(problem,listRuangan))
+	for i in range(len(best)):
+		best[i].print_jadwal()
+	print 'constraintBroken: ' + str(checkConstraint(best,listRuangan))
 
 if __name__ == '__main__':
 	main()
