@@ -314,12 +314,7 @@ class MainWindow(QWidget):
 		grid.addWidget(self.rb2, 3, 1)
 		grid.addWidget(self.rb3, 4, 1)
 		
-		if self.indikator == 1:
-			self.runbut.clicked.connect(self.setTableContentHill)
-		elif self.indikator == 2:
-			self.runbut.clicked.connect(self.setTableContentSA)
-		elif self.indikator == 3:
-			self.runbut.clicked.connect(self.setTableContentGA)
+			self.runbut.clicked.connect(self.setTableContentIndikator(self.indikator))
 			
 		
 		# Label Misc.
@@ -343,6 +338,17 @@ class MainWindow(QWidget):
 		print "BUTTON 3"
 		self.indikator = 3
 		
+
+#def setTableContentIndicated(self, indikator)
+if indikator == 1:
+setTableContentHill
+
+elif indikator == 2:
+setTableContentSA
+
+elif indikator == 3:
+setTableIndikatorGA
+
 	# Fill the Table with Data according to Algorithm selected, NB: constraint broken!
 	def setTableContentGA(self):
 		self.table.clear()
@@ -352,7 +358,7 @@ class MainWindow(QWidget):
 		self.table.horizontalHeader().setResizeMode(QHeaderView.Stretch)
 		self.table.verticalHeader().setResizeMode(QHeaderView.Stretch)
 		self.table.setVerticalHeaderLabels(['07:00','08:00','09:00','10:00','11:00','12:00','13:00','14:00','15:00','16:00','17:00'])
-		varMatkul = geneticAlgorithm()
+		varMatkul, constraint = geneticAlgorithm()
 		for i in range (len(varMatkul[0])):
 			jammulai = varMatkul[0][i].jam_mulai
 			start = abs(7-jammulai) #biar indexnya pas
@@ -382,7 +388,7 @@ class MainWindow(QWidget):
 					soda = varMatkul[0][i].kode + '  -  ' + varMatkul[0][i].kelas
 					self.table.setItem(start, 4, QTableWidgetItem(soda))
 					start = start+1		
-		self.consbroken.setText('Constraint Broken: ' + str(varMatkul[1]))
+		self.consbroken.setText('Constraint Broken: ' + str(constraint))
 
 	def setTableContentSA(self):
 		self.table.clear()
@@ -392,7 +398,7 @@ class MainWindow(QWidget):
 		self.table.horizontalHeader().setResizeMode(QHeaderView.Stretch)
 		self.table.verticalHeader().setResizeMode(QHeaderView.Stretch)
 		self.table.setVerticalHeaderLabels(['07:00','08:00','09:00','10:00','11:00','12:00','13:00','14:00','15:00','16:00','17:00'])
-		varMatkul = simulatedAnnealing()
+		varMatkul, constraint = simulatedAnnealing()
 		for i in range (len(varMatkul)):
 			jammulai = varMatkul[i].jam_mulai
 			start = abs(7-jammulai) #biar indexnya pas
@@ -422,7 +428,7 @@ class MainWindow(QWidget):
 					soda = varMatkul[i].kode + '  -  ' + varMatkul[i].kelas
 					self.table.setItem(start, 4, QTableWidgetItem(soda))
 					start = start+1
-		self.consbroken.setText('Constraint Broken: ') #tambah apa??
+		self.consbroken.setText('Constraint Broken: ' + str(constraint))
 		
 	def setTableContentHill(self):
 		self.table.clear()
@@ -432,7 +438,7 @@ class MainWindow(QWidget):
 		self.table.horizontalHeader().setResizeMode(QHeaderView.Stretch)
 		self.table.verticalHeader().setResizeMode(QHeaderView.Stretch)
 		self.table.setVerticalHeaderLabels(['07:00','08:00','09:00','10:00','11:00','12:00','13:00','14:00','15:00','16:00','17:00'])
-		varMatkul = hillAlgorithm()
+		varMatkul, constraint = hillAlgorithm()
 		for i in range (len(varMatkul)):
 			jammulai = varMatkul[i].jam_mulai
 			start = abs(7-jammulai) #biar indexnya pas
@@ -462,7 +468,7 @@ class MainWindow(QWidget):
 					soda = varMatkul[i].kode + '  -  ' + varMatkul[i].kelas
 					self.table.setItem(start, 4, QTableWidgetItem(soda))
 					start = start+1
-		self.consbroken.setText('Constraint Broken: ') #tambah apa?
+		self.consbroken.setText('Constraint Broken: ' + str(constraint))
 
 	# File Open Window Dialogue	
 	def choose_file(self):
@@ -496,7 +502,7 @@ def geneticAlgorithm():
 		fittestSpecies[0][i].print_jadwal()
 	print 'Constraint broken: ' + str(checkConstraint(fittestSpecies[0], listRuangan))
 	constraint = checkConstraint(fittestSpecies[0], listRuangan)
-	return fittestSpecies
+	return fittestSpecies, constraint
 
 # Hill Selected
 def hillAlgorithm():
@@ -512,7 +518,7 @@ def hillAlgorithm():
 		problem[i].print_jadwal()
 	print 'Constraint broken: ' + str(checkConstraint(problem, listRuangan))
 	constraint = checkConstraint(problem, listRuangan)
-	return problem
+	return problem, constraint
 
 # SA Selected
 def simulatedAnnealing():
@@ -556,7 +562,7 @@ def simulatedAnnealing():
 		best[i].print_jadwal()
 	print 'Constraint broken: ' + str(checkConstraint(best,listRuangan))
 	constraint = checkConstraint(best, listRuangan)
-	return best
+	return best, constraint
 
 
 # Main Program
