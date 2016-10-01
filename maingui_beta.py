@@ -390,6 +390,9 @@ class MainWindow(QWidget):
 		self.consbroken = QLabel('Constraint Broken: ')
 		self.consbroken.setFont(font)
 		grid.addWidget(self.consbroken, 5, 2)
+		
+		# List of Color
+		self.licolor = ['red','blue','darkMagenta','darkGreen','magenta','green','darkCyan','darkBlue','cyan','yellow']
 
 	# Check Radio Button Checked, change Indikator for Algorithm Choosing
 	def onRadioButton1(self):
@@ -416,61 +419,17 @@ class MainWindow(QWidget):
 	
 	# Coloring
 	def Coloring(self, varMatkul, soda, i):
-		if (varMatkul[0][i].kode == "IF2110"):
-			item = QTableWidgetItem(soda)
-			item.setTextColor(QColor('red'))
-		elif (varMatkul[0][i].kode == "IF2130"):
-			item = QTableWidgetItem(soda)
-			item.setTextColor(QColor('blue'))
-		elif (varMatkul[0][i].kode == "IF2150"):
-			item = QTableWidgetItem(soda)
-			item.setTextColor(QColor('darkMagenta'))
-		elif (varMatkul[0][i].kode == "IF2170"):
-			item = QTableWidgetItem(soda)
-			item.setTextColor(QColor('darkGreen'))
-		elif (varMatkul[0][i].kode == "IF3110"):
-			item = QTableWidgetItem(soda)
-			item.setTextColor(QColor('magenta'))
-		elif (varMatkul[0][i].kode == "IF3130"):
-			item = QTableWidgetItem(soda)
-			item.setTextColor(QColor('green'))
-		elif (varMatkul[0][i].kode == "IF3170"):
-			item = QTableWidgetItem(soda)
-			item.setTextColor(QColor('darkCyan'))
-		elif (varMatkul[0][i].kode == "IF3111"):
-			item = QTableWidgetItem(soda)
-			item.setTextColor(QColor('darkBlue'))
+		item = QTableWidgetItem(soda)
+		item.setTextColor(QColor(self.licolor[i]))
 		return item
 		
 	# Coloring 2
 	def Coloring2(self, varMatkul, soda, i):
-		if (varMatkul[i].kode == "IF2110"):
-			item = QTableWidgetItem(soda)
-			item.setTextColor(QColor('red'))
-		elif (varMatkul[i].kode == "IF2130"):
-			item = QTableWidgetItem(soda)
-			item.setTextColor(QColor('blue'))
-		elif (varMatkul[i].kode == "IF2150"):
-			item = QTableWidgetItem(soda)
-			item.setTextColor(QColor('darkMagenta'))
-		elif (varMatkul[i].kode == "IF2170"):
-			item = QTableWidgetItem(soda)
-			item.setTextColor(QColor('darkGreen'))
-		elif (varMatkul[i].kode == "IF3110"):
-			item = QTableWidgetItem(soda)
-			item.setTextColor(QColor('magenta'))
-		elif (varMatkul[i].kode == "IF3130"):
-			item = QTableWidgetItem(soda)
-			item.setTextColor(QColor('green'))
-		elif (varMatkul[i].kode == "IF3170"):
-			item = QTableWidgetItem(soda)
-			item.setTextColor(QColor('darkCyan'))
-		elif (varMatkul[i].kode == "IF3111"):
-			item = QTableWidgetItem(soda)
-			item.setTextColor(QColor('darkBlue'))
+		item = QTableWidgetItem(soda)
+		item.setTextColor(QColor(self.licolor[i]))
 		return item
 		
-	# Fill the Table with Data according to Algorithm selected, NB: constraint broken!
+	# Fill the Table with Data according to Algorithm selected
 	def setTableContentGA(self):
 		self.table.clear()
 		self.table.setRowCount(11)
