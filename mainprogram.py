@@ -121,14 +121,14 @@ def getConstraintMatkul(matkul1, matkul2):
 	if (matkul1.hari == matkul2.hari and matkul1.kelas == matkul2.kelas):
 		if (matkul1.jam_mulai >= matkul2.jam_mulai and matkul1.jam_mulai < matkul2.jam_mulai+matkul2.durasi):
 			if (matkul1.jam_mulai + matkul1.durasi > matkul2.jam_mulai + matkul2.durasi):
-				durasi = matkul1.durasi - (matkul1.jam_mulai + matkul1.durasi) - (matkul2.jam_mulai + matkul2.durasi)
+				durasi = matkul1.durasi - (matkul1.jam_mulai + matkul1.durasi) + (matkul2.jam_mulai + matkul2.durasi)
 			else:
 				durasi = matkul1.durasi
 			for i in range(durasi):
 				constraintBroken.append([matkul1.hari, matkul1.jam_mulai+i]) 
 		if (matkul2.jam_mulai >= matkul1.jam_mulai and matkul2.jam_mulai < matkul1.jam_mulai+matkul1.durasi):
 			if (matkul2.jam_mulai + matkul2.durasi > matkul1.jam_mulai + matkul1.durasi):
-				durasi = matkul2.durasi - (matkul2.jam_mulai + matkul2.durasi) - (matkul1.jam_mulai + matkul1.durasi)
+				durasi = matkul2.durasi - (matkul2.jam_mulai + matkul2.durasi) + (matkul1.jam_mulai + matkul1.durasi)
 			else:
 				durasi = matkul2.durasi
 			for i in range(durasi):
