@@ -430,6 +430,9 @@ class MainWindow(QWidget):
 		self.consbroken = QLabel('Constraint Broken: ')
 		self.consbroken.setFont(font)
 		grid.addWidget(self.consbroken, 5, 2)
+		self.efektivitas = QLabel('Efektivitas: ')
+		self.efektivitas.setFont(font)
+		grid.addWidget(self.efektivitas, 4,2)
 		
 		# List of Color
 		self.licolor = ['red','blue','darkMagenta','darkGreen','magenta','green','darkCyan','darkBlue','cyan','yellow']
@@ -564,6 +567,7 @@ class MainWindow(QWidget):
 					jamTerpakai += 1
 		self.consbroken.setText('Constraint Broken: ' + str(constraint))
 		jamTerpakai = jamTerpakai-len(listconstraint)+len(lcu)
+		self.efektivitas.setText('Efektivitas: ' + str(jamTerpakai*1.0/totalRuang))
 		print 'Efektivitas: ' + str(jamTerpakai*1.0/totalRuang)
 		z = 0;
 		for c in range (0, len(listconstraint)):
@@ -670,6 +674,7 @@ class MainWindow(QWidget):
 					jamTerpakai += 1
 		self.consbroken.setText('Constraint Broken: ' + str(constraint))
 		jamTerpakai = jamTerpakai-len(listconstraint)+len(lcu)
+		self.efektivitas.setText('Efektivitas: ' + str(jamTerpakai*1.0/totalRuang))
 		print 'Efektivitas: ' + str(jamTerpakai*1.0/totalRuang)
 		z = 0;
 		for c in range (0, len(listconstraint)):
@@ -776,6 +781,7 @@ class MainWindow(QWidget):
 					start = start+1
 		self.consbroken.setText('Constraint Broken: ' + str(constraint))
 		jamTerpakai = jamTerpakai-len(listconstraint)+len(lcu)
+		self.efektivitas.setText('Efektivitas: ' + str(jamTerpakai*1.0/totalRuang))
 		print 'Efektivitas: ' + str(jamTerpakai*1.0/totalRuang)
 		z = 0;
 		for c in range (0, len(listconstraint)):
