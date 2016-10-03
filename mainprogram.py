@@ -155,12 +155,13 @@ def getConstraintRuang(matkul, list_ruangan):
 	return constraintBroken
 
 def getConstraint(list_matkul, list_ruangan):
-	totalConstraintBroken = []
+	totalConstraintRuangan = []
+	totalConstraintMatkul = []
 	for i in range(len(list_matkul)):
-		totalConstraintBroken += getConstraintRuang(list_matkul[i],list_ruangan)
+		totalConstraintRuangan += getConstraintRuang(list_matkul[i],list_ruangan)
 		for j in range(i+1, len(list_matkul)):
-			totalConstraintBroken += getConstraintMatkul(list_matkul[i],list_matkul[j])
-	return totalConstraintBroken
+			totalConstraintMatkul += getConstraintMatkul(list_matkul[i],list_matkul[j])
+	return totalConstraintRuangan, totalConstraintMatkul
 
 def copySpecies(species):
 	new_species = []
@@ -473,7 +474,13 @@ class MainWindow(QWidget):
 		self.table.clear()
 		self.table.setHorizontalHeaderLabels(['Senin','Selasa','Rabu','Kamis','Jumat'])
 		self.table.setVerticalHeaderLabels(['07:00','08:00','09:00','10:00','11:00','12:00','13:00','14:00','15:00','16:00','17:00'])
-		varMatkul, constraint, listconstraint = geneticAlgorithm()
+		varMatkul, constraint, lcRuang, lcMatkul, totalRuang = geneticAlgorithm()
+		listconstraint = lcMatkul + lcRuang
+		lcu = []
+		for elem in lcMatkul:
+			if elem not in lcu:
+				lcu.append(elem)
+		jamTerpakai = 0
 		
 		#Inisiasi
 		for i in range (0,11):
@@ -498,6 +505,7 @@ class MainWindow(QWidget):
 						self.minitable = self.table.cellWidget(start,0)
 						self.minitable.addItem(QTableWidgetItem(item))
 					start = start+1
+					jamTerpakai += 1
 			elif (varMatkul[0][i].hari == 2):
 				for j in range (0,lama):
 					soda = varMatkul[0][i].kode + '  -  ' + varMatkul[0][i].kelas
@@ -511,6 +519,7 @@ class MainWindow(QWidget):
 						self.minitable = self.table.cellWidget(start,1)
 						self.minitable.addItem(QTableWidgetItem(item))
 					start = start+1
+					jamTerpakai += 1
 			elif (varMatkul[0][i].hari == 3):
 				for j in range (0,lama):
 					soda = varMatkul[0][i].kode + '  -  ' + varMatkul[0][i].kelas
@@ -524,6 +533,7 @@ class MainWindow(QWidget):
 						self.minitable = self.table.cellWidget(start,2)
 						self.minitable.addItem(QTableWidgetItem(item))
 					start = start+1
+					jamTerpakai += 1
 			elif (varMatkul[0][i].hari == 4):
 				for j in range (0,lama):
 					soda = varMatkul[0][i].kode + '  -  ' + varMatkul[0][i].kelas
@@ -537,6 +547,7 @@ class MainWindow(QWidget):
 						self.minitable = self.table.cellWidget(start,3)
 						self.minitable.addItem(QTableWidgetItem(item))
 					start = start+1
+					jamTerpakai += 1
 			elif (varMatkul[0][i].hari == 5):
 				for j in range (0,lama):
 					soda = varMatkul[0][i].kode + '  -  ' + varMatkul[0][i].kelas
@@ -550,7 +561,10 @@ class MainWindow(QWidget):
 						self.minitable = self.table.cellWidget(start,4)
 						self.minitable.addItem(QTableWidgetItem(item))
 					start = start+1
+					jamTerpakai += 1
 		self.consbroken.setText('Constraint Broken: ' + str(constraint))
+		jamTerpakai = jamTerpakai-len(listconstraint)+len(lcu)
+		print 'Efektivitas: ' + str(jamTerpakai*1.0/totalRuang)
 		z = 0;
 		for c in range (0, len(listconstraint)):
 			self.x = listconstraint[z][0] #day
@@ -566,7 +580,13 @@ class MainWindow(QWidget):
 		self.table.clear()
 		self.table.setHorizontalHeaderLabels(['Senin','Selasa','Rabu','Kamis','Jumat'])
 		self.table.setVerticalHeaderLabels(['07:00','08:00','09:00','10:00','11:00','12:00','13:00','14:00','15:00','16:00','17:00'])
-		varMatkul, constraint, listconstraint = simulatedAnnealing()
+		varMatkul, constraint, lcRuang, lcMatkul, totalRuang = simulatedAnnealing()
+		listconstraint = lcMatkul + lcRuang
+		lcu = []
+		for elem in lcMatkul:
+			if elem not in lcu:
+				lcu.append(elem)
+		jamTerpakai = 0
 		
 		#Inisiasi
 		for i in range (0,11):
@@ -590,6 +610,7 @@ class MainWindow(QWidget):
 					else:
 						self.minitable = self.table.cellWidget(start,0)
 						self.minitable.addItem(QTableWidgetItem(item))
+					jamTerpakai += 1
 					start = start+1
 			elif (varMatkul[i].hari == 2):
 				for j in range (0,lama):
@@ -603,6 +624,7 @@ class MainWindow(QWidget):
 					else:
 						self.minitable = self.table.cellWidget(start,1)
 						self.minitable.addItem(QTableWidgetItem(item))
+					jamTerpakai += 1
 					start = start+1
 			elif (varMatkul[i].hari == 3):
 				for j in range (0,lama):
@@ -616,6 +638,7 @@ class MainWindow(QWidget):
 					else:
 						self.minitable = self.table.cellWidget(start,2)
 						self.minitable.addItem(QTableWidgetItem(item))
+					jamTerpakai += 1
 					start = start+1
 			elif (varMatkul[i].hari == 4):
 				for j in range (0,lama):
@@ -629,6 +652,7 @@ class MainWindow(QWidget):
 					else:
 						self.minitable = self.table.cellWidget(start,3)
 						self.minitable.addItem(QTableWidgetItem(item))
+					jamTerpakai += 1
 					start = start+1
 			elif (varMatkul[i].hari == 5):
 				for j in range (0,lama):
@@ -643,7 +667,10 @@ class MainWindow(QWidget):
 						self.minitable = self.table.cellWidget(start,4)
 						self.minitable.addItem(QTableWidgetItem(item))
 					start = start+1
+					jamTerpakai += 1
 		self.consbroken.setText('Constraint Broken: ' + str(constraint))
+		jamTerpakai = jamTerpakai-len(listconstraint)+len(lcu)
+		print 'Efektivitas: ' + str(jamTerpakai*1.0/totalRuang)
 		z = 0;
 		for c in range (0, len(listconstraint)):
 			self.x = listconstraint[z][0] #day
@@ -659,7 +686,13 @@ class MainWindow(QWidget):
 		self.table.clear()
 		self.table.setHorizontalHeaderLabels(['Senin','Selasa','Rabu','Kamis','Jumat'])
 		self.table.setVerticalHeaderLabels(['07:00','08:00','09:00','10:00','11:00','12:00','13:00','14:00','15:00','16:00','17:00'])
-		varMatkul, constraint, listconstraint = hillAlgorithm()
+		varMatkul, constraint, lcRuang, lcMatkul, totalRuang = hillAlgorithm()
+		listconstraint = lcMatkul + lcRuang
+		lcu = []
+		for elem in lcMatkul:
+			if elem not in lcu:
+				lcu.append(elem)
+		jamTerpakai = 0
 		
 		#Inisiasi
 		for i in range (0,11):
@@ -683,6 +716,7 @@ class MainWindow(QWidget):
 					else:
 						self.minitable = self.table.cellWidget(start,0)
 						self.minitable.addItem(QTableWidgetItem(item))
+					jamTerpakai += 1
 					start = start+1
 			elif (varMatkul[i].hari == 2):
 				for j in range (0,lama):
@@ -696,6 +730,7 @@ class MainWindow(QWidget):
 					else:
 						self.minitable = self.table.cellWidget(start,1)
 						self.minitable.addItem(QTableWidgetItem(item))
+					jamTerpakai += 1
 					start = start+1
 			elif (varMatkul[i].hari == 3):
 				for j in range (0,lama):
@@ -709,6 +744,7 @@ class MainWindow(QWidget):
 					else:
 						self.minitable = self.table.cellWidget(start,2)
 						self.minitable.addItem(QTableWidgetItem(item))
+					jamTerpakai += 1
 					start = start+1
 			elif (varMatkul[i].hari == 4):
 				for j in range (0,lama):
@@ -722,6 +758,7 @@ class MainWindow(QWidget):
 					else:
 						self.minitable = self.table.cellWidget(start,3)
 						self.minitable.addItem(QTableWidgetItem(item))
+					jamTerpakai += 1
 					start = start+1
 			elif (varMatkul[i].hari == 5):
 				for j in range (0,lama):
@@ -735,8 +772,11 @@ class MainWindow(QWidget):
 					else:
 						self.minitable = self.table.cellWidget(start,4)
 						self.minitable.addItem(QTableWidgetItem(item))
+					jamTerpakai += 1
 					start = start+1
 		self.consbroken.setText('Constraint Broken: ' + str(constraint))
+		jamTerpakai = jamTerpakai-len(listconstraint)+len(lcu)
+		print 'Efektivitas: ' + str(jamTerpakai*1.0/totalRuang)
 		z = 0;
 		for c in range (0, len(listconstraint)):
 			self.x = listconstraint[z][0] #day
@@ -780,8 +820,11 @@ def geneticAlgorithm():
 		fittestSpecies[0][i].print_jadwal()
 	print 'Constraint broken: ' + str(checkConstraint(fittestSpecies[0], listRuangan))
 	constraint = checkConstraint(fittestSpecies[0], listRuangan)
-	listconstraint = getConstraint(fittestSpecies[0], listRuangan)
-	return fittestSpecies, constraint, listconstraint
+	lcRuang, lcMatkul = getConstraint(fittestSpecies[0], listRuangan)
+	totalRuang = 0
+	for i in range(len(listRuangan)):
+		totalRuang += (listRuangan[i].jam_akhir-listRuangan[i].jam_mulai) * len(listRuangan[i].hari)
+	return fittestSpecies, constraint, lcRuang, lcMatkul, totalRuang
 
 # Hill Selected
 def hillAlgorithm():
@@ -798,8 +841,11 @@ def hillAlgorithm():
 		problem[i].print_jadwal()
 	print 'Constraint broken: ' + str(checkConstraint(problem, listRuangan))
 	constraint = checkConstraint(problem, listRuangan)
-	listconstraint = getConstraint(problem, listRuangan)
-	return problem, constraint, listconstraint
+	lcRuang, lcMatkul = getConstraint(problem, listRuangan)
+	totalRuang = 0
+	for i in range(len(listRuangan)):
+		totalRuang += (listRuangan[i].jam_akhir-listRuangan[i].jam_mulai) * len(listRuangan[i].hari)
+	return problem, constraint, lcRuang, lcMatkul, totalRuang
 
 # SA Selected
 def simulatedAnnealing():
@@ -844,8 +890,11 @@ def simulatedAnnealing():
 		best[i].print_jadwal()
 	print 'Constraint broken: ' + str(checkConstraint(best,listRuangan))
 	constraint = checkConstraint(best, listRuangan)
-	listconstraint = getConstraint(best, listRuangan)
-	return best, constraint, listconstraint
+	lcRuang, lcMatkul = getConstraint(best, listRuangan)
+	totalRuang = 0
+	for i in range(len(listRuangan)):
+		totalRuang += (listRuangan[i].jam_akhir-listRuangan[i].jam_mulai) * len(listRuangan[i].hari)
+	return best, constraint, lcRuang, lcMatkul, totalRuang
 
 
 # Main Program
